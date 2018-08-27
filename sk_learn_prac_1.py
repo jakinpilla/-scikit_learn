@@ -20,6 +20,17 @@ pd.set_option('display.width', 1000)
 import matplotlib.pyplot as plt
 # %matplotlib inline
 
+
+# scikit-learn commonly used classes
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import classification_report 
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import SelectFromModel
+from sklearn.pipeline import Pipeline
+
 df = pd.read_csv('./data/M3T1_data_pepTestCustomers.csv')
 new = pd.read_csv('./data/M3T1_data_pepNewCustomers.csv')
 
@@ -229,6 +240,23 @@ grid_search.fit(X_train, y_train)
 
 # Evaluate the model with best parameters
 
+grid_search.score(X_test, y_test)
+
+print('Best parameters :  {}'.format(grid_search.best_params_))
+print('Best CV score :  {:.2f}'.format(grid_search.best_score_))
+print('Best estimator:\n{}'.format(grid_search.best_estimator_))
+
+# when the parameters are asymmetric
+param_grid = [{'kernel' : ['rbf'],
+               'C' : [.001, .01, .1, 1, 10, 100],
+               'gamma' : [.001, .01, .1, 1, 10, 100]},
+    {'kernel' : ['linear'],
+     'C' : [.001, .01, .1, 1, 10, 100]}]
+
+param_grid
+
+grid_search = GridSearchCV(SVC(), param_grid, cv=5, n_jobs=-1)
+grid_search.fit(X_train, y_train)
 grid_search.score(X_test, y_test)
 
 print('Best parameters :  {}'.format(grid_search.best_params_))
